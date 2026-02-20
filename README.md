@@ -10,10 +10,14 @@
 - [Screenshot](#screenshot)
 - [Design Document](#design-document)
 - [Live Demo](#live-demo)
+- [Demo Video](#demo-video)
 - [Tech Stack](#tech-stack)
 - [Database](#database)
 - [How to Use](#how-to-use)
 - [Instructions to Build](#instructions-to-build)
+- [API Endpoints](#api-endpoints)
+- [MongoDB Collections](#mongodb-collections)
+- [Gen AI Usage](#gen-ai-usage)
 
 ## Project Objective
 
@@ -25,13 +29,19 @@ SkillSwap is a peer to peer skill exchange platform for students. Students can p
 
 ## Design Document
 
-[View on Figma](https://www.figma.com/design/c4AixRG9FlYkXetgPKfsfy/SkillSwap?node-id=0-1&t=oP6XeVJdUM2CDowP-1)
+[View the full Design Document (PDF)](SkillSwap%20Design%20Document.pdf) including project description, user personas, user stories, design mockups and technical decisions.
 
-See the project proposal document for user personas, user stories, and design mockups.
+[View Wireframes on Figma](https://www.figma.com/design/c4AixRG9FlYkXetgPKfsfy/SkillSwap?node-id=0-1&t=oP6XeVJdUM2CDowP-1)
+
+[View Presentation on Canva](https://www.canva.com/design/DAHB40CDaHA/D9O-3lXtIaAL_eBCJILhAQ/edit?utm_content=DAHB40CDaHA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Live Demo
 
-[Deployed on Vercel](to-doo)
+[Deployed on Vercel](https://skill-swap-nine-sable.vercel.app/)
+
+## Demo Video
+
+[Watch on YouTube](https://youtu.be/es0zNi8ATZs)
 
 ## Tech Stack
 
@@ -109,3 +119,65 @@ npm start
 ```
 
 The app will be available at `http://localhost:3000`.
+
+## API Endpoints
+
+### Auth
+
+- `POST /api/auth/signup` - Create a new user
+- `POST /api/auth/login` - Log in and receive JWT
+- `GET /api/auth/me` - Get current user info
+
+### Posts
+
+- `GET /api/posts` - Get all posts (optional `?search=`, `?category=`, `?sort=newest|inquiries`)
+- `GET /api/posts/:id` - Get a single post
+- `POST /api/posts` - Create a new post
+- `PUT /api/posts/:id` - Update a post
+- `DELETE /api/posts/:id` - Delete a post
+
+### Inquiries
+
+- `GET /api/posts/:postId/inquiries` - Get all inquiries for a post
+- `POST /api/posts/:postId/inquiries` - Send an inquiry
+- `DELETE /api/inquiries/:id` - Delete an inquiry
+
+## MongoDB Collections
+
+1. **users** - Stores registered users
+   - `_id` : ObjectId
+   - `name` : String
+   - `email` : String (unique)
+   - `password` : String (bcrypt hashed)
+   - `createdAt` : Date
+
+2. **posts** - Stores skill exchange posts
+   - `_id` : ObjectId
+   - `userId` : ObjectId (reference to users)
+   - `name` : String (poster name, denormalized)
+   - `skillOffered` : String
+   - `skillWanted` : String
+   - `description` : String
+   - `category` : String (Programming, Music, Language, Sports, Art, Academics, Other)
+   - `tags` : Array of Strings
+   - `inquiryCount` : Number (denormalized count)
+   - `createdAt` : Date
+
+3. **inquiries** - Stores messages sent to post owners
+   - `_id` : ObjectId
+   - `postId` : ObjectId (reference to posts)
+   - `userId` : ObjectId (reference to users)
+   - `senderName` : String
+   - `senderContact` : String
+   - `message` : String
+   - `createdAt` : Date
+
+## Gen AI Usage 
+
+**Model**: Claude
+
+**Prompt 1:** "How do I structure a vercel.json config to route API requests to an Express serverless function while serving static files from a public folder?"
+
+**Prompt 2:** "What is the best way to debounce a search input in vanilla JavaScript so it does not fire a fetch request on every keystroke?"
+
+**Prompt 3:** "How should I update the inquiryCount field on posts after bulk inserting inquiries in the seed script without running a separate query for each post?"
